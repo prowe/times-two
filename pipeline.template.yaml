@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "CI/CD Pipeline for the times-two service. (prowe)"
-Parameters: {}
+Parameters:
+  RepoToken:
+    Type: String
+    Description: OAuth Token for the repo
 Resources:
   ArtifactStorage:
     Type: "AWS::S3::Bucket"
@@ -74,7 +77,7 @@ Resources:
               Owner: "prowe"
               Repo: "times-two"
               Branch: master
-              OAuthToken: "75bd8655a508f7f0effaa763391ab73429523cd5"
+              OAuthToken: !Ref RepoToken
         - Name: Build
           Actions:
           - Name: Build

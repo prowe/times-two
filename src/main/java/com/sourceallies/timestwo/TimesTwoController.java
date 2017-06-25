@@ -13,6 +13,7 @@ public class TimesTwoController {
 		path="/", 
 		method=RequestMethod.POST)
 	public @ResponseBody int DoCalculation(@RequestBody String input) {
-		return 0;
+		int val = Integer.parseInt(input);
+		return val * 2;
 	}
 }
