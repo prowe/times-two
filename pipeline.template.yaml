@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CI/CD Pipeline for the times-two service. (prowe)"
+Parameters: {}
+Resources:
+  ArtifactStorage:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties: {}
+  PipelineRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: 
+          Version: "2012-10-17"
+          Statement: 
+            - Effect: "Allow"
+              Action: "sts:AssumeRole"
+              Principal:
+                Service: "codepipeline.amazonaws.com"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AWSCodePipelineFullAccess"
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+  BuildRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: 
+          Version: "2012-10-17"
+          Statement: 
+            - Effect: "Allow"
+              Action: "sts:AssumeRole"
+              Principal:
+                Service: "codebuild.amazonaws.com"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess"
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
+  BuildProject:
+    Type: AWS::CodeBuild::Project
+    DependsOn:
+      - BuildRole
+    Properties:
+      Name: timesTwo
+      ServiceRole: !GetAtt BuildRole.Arn
+      Source:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/java:openjdk-8
+      Artifacts:
+        Type: CODEPIPELINE
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    DependsOn:
+      - PipelineRole
+      - BuildProject
+    Properties:
+      ArtifactStore: 
+        Type: "S3"
+        Location: !Ref ArtifactStorage
+      RoleArn: !GetAtt PipelineRole.Arn
+      RestartExecutionOnUpdate: true
+      Stages:
+        - Name: Source
+          Actions:
+          - Name: Source
+            ActionTypeId:
+              Category: Source 
+              Provider: GitHub
+              Owner: ThirdParty 
+              Version: 1 
+            OutputArtifacts:
+              - Name: sourceCode
+            Configuration:
+              Owner: "prowe"
+              Repo: "times-two"
+              Branch: master
+              OAuthToken: "41b22d001a52de0ae1650feb27d269d4727699cd"
+        - Name: Build
+          Actions:
+          - Name: Build
+            ActionTypeId:
+              Category: Build
+              Owner: AWS
+              Provider: CodeBuild
+              Version: 1
+            InputArtifacts:
+              - Name: sourceCode
+            Configuration:
+              ProjectName: timesTwo
