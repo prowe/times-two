@@ -74,7 +74,7 @@ Resources:
               Owner: "prowe"
               Repo: "times-two"
               Branch: master
-              OAuthToken: "41b22d001a52de0ae1650feb27d269d4727699cd"
+              OAuthToken: "75bd8655a508f7f0effaa763391ab73429523cd5"
         - Name: Build
           Actions:
           - Name: Build
