@@ -17,7 +17,7 @@ public class TimesTwoControllerTests {
 	
 	@Test
 	public void calculateShouldReturnProperNumber() {
-		int result = controller.DoCalculation(4);
+		int result = controller.DoCalculation("4");
 		Assert.assertThat(result, equalTo(8));
 	}
 }
