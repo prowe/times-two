@@ -36,6 +36,18 @@ Resources:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess"
         - "arn:aws:iam::aws:policy/AdministratorAccess"
+  DeployRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: 
+          Version: "2012-10-17"
+          Statement: 
+            - Effect: "Allow"
+              Action: "sts:AssumeRole"
+              Principal:
+                Service: "codepipeline.amazonaws.com"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AdministratorAccess"
   BuildProject:
     Type: AWS::CodeBuild::Project
     DependsOn:
@@ -73,6 +85,7 @@ Resources:
     DependsOn:
       - PipelineRole
       - BuildProject
+      - DeployRole
     Properties:
       ArtifactStore: 
         Type: "S3"
@@ -109,7 +122,7 @@ Resources:
               ProjectName: timesTwo
             OutputArtifacts:
               - Name: buildResults
-        - Name: Deploy_development
+        - Name: Deploy_DEV
           Actions:
           - Name: Deploy
             ActionTypeId:
@@ -120,7 +133,7 @@ Resources:
             InputArtifacts:
               - Name: buildResults
             Configuration:
-              RoleArn: !GetAtt [CFNRole, Arn]
-              StackName: prowe-timesTwo-Dev
+              RoleArn: !GetAtt DeployRole.Arn
+              StackName: !Sub '${AWS::StackName}-DEV'
               ActionMode: REPLACE_ON_FAILURE
               TemplatePath: !Sub "buildResults::application.template.yaml"
