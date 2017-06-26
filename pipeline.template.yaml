@@ -49,8 +49,24 @@ Resources:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/java:openjdk-8
+        EnvironmentVariables:
+          DOCKER_IMAGE_URL: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${DockerRepo}
       Artifacts:
         Type: CODEPIPELINE
+  DockerRepo:
+    Type: "AWS::ECR::Repository"
+    Properties:
+      RepositoryPolicyText: 
+        Version: "2012-10-17"
+        Statement: 
+          - Sid: AllowPushPull
+            Effect: Allow
+            Principal: 
+              AWS: 
+                - !GetAtt BuildRole.Arn
+                - !GetAtt PipelineRole.Arn
+            Action: 
+              - "ecr:*"
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     DependsOn:

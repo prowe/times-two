@@ -1,7 +1,6 @@
 version: 0.2
 env:
   variables: {}
-#    JAVA_HOME: "/usr/lib/jvm/java-8-openjdk-amd64"
 phases:
   install:
     commands:
@@ -11,10 +10,12 @@ phases:
       - echo Nothing to do in the pre_build phase...
   build:
     commands:
-      - mvn test
+      - mvn test package
+      - docker build --tag $DOCKER_IMAGE_URL .
   post_build:
     commands:
-      - mvn package
+      - $(aws ecr get-login)
+      - docker push $DOCKER_IMAGE_URL
 artifacts:
   discard-paths: yes
   files:
