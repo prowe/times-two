@@ -17,4 +17,5 @@ phases:
       - docker push $DOCKER_IMAGE_URL
 artifacts:
   discard-paths: yes
-  files: []
+  files:
+    - "application.template.yaml"

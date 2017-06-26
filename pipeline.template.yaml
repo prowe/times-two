@@ -107,3 +107,20 @@ Resources:
               - Name: sourceCode
             Configuration:
               ProjectName: timesTwo
+            OutputArtifacts:
+              - Name: buildResults
+        - Name: Deploy_development
+          Actions:
+          - Name: Deploy
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Provider: CloudFormation
+              Version: '1'
+            InputArtifacts:
+              - Name: buildResults
+            Configuration:
+              RoleArn: !GetAtt [CFNRole, Arn]
+              StackName: prowe-timesTwo-Dev
+              ActionMode: REPLACE_ON_FAILURE
+              TemplatePath: !Sub "buildResults::application.template.yaml"
