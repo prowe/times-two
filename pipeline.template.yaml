@@ -48,9 +48,10 @@ Resources:
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/java:openjdk-8
+        Image: aws/codebuild/docker:1.12.1
         EnvironmentVariables:
-          DOCKER_IMAGE_URL: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${DockerRepo}
+          - Name: DOCKER_IMAGE_URL
+            Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${DockerRepo}:latest"
       Artifacts:
         Type: CODEPIPELINE
   DockerRepo:

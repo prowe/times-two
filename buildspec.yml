@@ -10,7 +10,6 @@ phases:
       - echo Nothing to do in the pre_build phase...
   build:
     commands:
-      - mvn test package
       - docker build --tag $DOCKER_IMAGE_URL .
   post_build:
     commands:
@@ -18,6 +17,4 @@ phases:
       - docker push $DOCKER_IMAGE_URL
 artifacts:
   discard-paths: yes
-  files:
-    - target/takeTwo.jar
-    - target/surefire-reports/TEST-*.xml
+  files: []
