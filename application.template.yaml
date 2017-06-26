@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description": take-two service (prowe)
+Parameters:
+  ImageUrl:
+    Description: full URL (including tag) to the docker image
+    Type: String
+    Default: "abc"
+Resources:
+  LogGroup:
+    Type": "AWS::Logs::LogGroup"
+    Properties:
+      RetentionInDays: 30
