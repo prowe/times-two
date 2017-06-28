@@ -20,5 +20,5 @@ phases:
 artifacts:
   discard-paths: yes
   files:
-    - "application.template.yaml"
+    - "src/main/cloudformation/*"
     - "buildOutputs.json"

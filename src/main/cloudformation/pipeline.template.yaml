@@ -115,4 +115,5 @@ Resources:
               RoleArn: !GetAtt PipelineRole.Arn
               StackName: !Sub '${AWS::StackName}-DEV'
               ActionMode: REPLACE_ON_FAILURE
-              TemplatePath: !Sub "buildResults::application.template.yaml"
+              TemplatePath: "buildResults::application.template.yaml"
+              TemplateConfiguration: "buildResults::dev.params.json"
