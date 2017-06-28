@@ -7,7 +7,7 @@ phases:
       - echo Nothing to install
   pre_build:
     commands:
-      - "DOCKER_IMAGE_URL=$DOCKER_REPOSITORY_URL:$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - "DOCKER_IMAGE_URL=${DOCKER_REPOSITORY_URL}:${!CODEBUILD_BUILD_ID#*:}"
   build:
     commands:
       - "docker build --tag $DOCKER_IMAGE_URL ."
@@ -15,8 +15,10 @@ phases:
     commands:
       - $(aws ecr get-login)
       - docker push $DOCKER_IMAGE_URL
+      - 'echo "{\"imageUrl\": \"$DOCKER_IMAGE_URL\"}" > buildOutputs.json'
       - echo Pushed image to $DOCKER_IMAGE_URL
 artifacts:
   discard-paths: yes
   files:
     - "application.template.yaml"
+    - "buildOutputs.json"
