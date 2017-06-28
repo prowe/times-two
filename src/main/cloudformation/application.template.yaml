@@ -43,7 +43,7 @@ Resources:
       AvailabilityZones: 
       - us-east-1b
       SecurityGroups: 
-      - !ImportValue BaseNetworking-PublicSecurityGroupName
+      - !ImportValue BaseNetworking-PublicSecurityGroupId
       Listeners:
       - LoadBalancerPort: 80
         InstancePort: 9070
