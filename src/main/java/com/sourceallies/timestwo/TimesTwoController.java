@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class TimesTwoController {
 
-	@RequestMapping(
-		path="/", 
-		method=RequestMethod.POST)
+	@RequestMapping(path="/", method=RequestMethod.POST)
 	public @ResponseBody int DoCalculation(@RequestBody String input) {
 		int val = Integer.parseInt(input);
 		return val * 2;
+	}
+
+	@RequestMapping(path="/", method=RequestMethod.GET)
+	public @ResponseBody String Get() {
+		return "OK";
 	}
 }

@@ -4,9 +4,55 @@ Parameters:
   ImageUrl:
     Description: full URL (including tag) to the docker image
     Type: String
-    Default: "abc"
 Resources:
   LogGroup:
     Type: "AWS::Logs::LogGroup"
     Properties:
       RetentionInDays: 30
+  TaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      ContainerDefinitions:
+      - Name: times-two
+        Cpu: 256
+        Essential: true
+        Image: !Ref ImageUrl
+        PortMappings: 
+        - HostPort: 9070
+          ContainerPort: 8080
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref LogGroup
+            awslogs-region: !Ref AWS::Region
+  Service:
+    Type: "AWS::ECS::Service"
+    Properties:
+      Cluster: !ImportValue ECSDefaultCluster-ClusterName
+      DesiredCount: 1
+      Role: !ImportValue ECSDefaultCluster-ServiceRoleARN
+      TaskDefinition: !Ref TaskDefinition
+      LoadBalancers:
+      - ContainerName: "times-two"
+        ContainerPort: 8080,
+        LoadBalancerName: !Ref LoadBalancer
+  LoadBalancer:
+    Type: "AWS::ElasticLoadBalancing::LoadBalancer"
+    Properties:
+      AvailabilityZones: 
+      - us-east-1b
+      SecurityGroups: !ImportValue BaseNetworking-PublicSecurityGroupName
+      Listeners:
+      - LoadBalancerPort: 80
+        InstancePort: 9070
+        Protocol: HTTP
+      HealthCheck:
+        Target: "HTTP:9070/"
+        HealthyThreshold: 2
+        UnhealthyThreshold: 5
+        Interval: 60
+        Timeout: 45
+Outputs:
+  LoadBalancerUrl:
+    Description: URL of the ELB
+    Value: !GetAtt LoadBalancer.DNSName
