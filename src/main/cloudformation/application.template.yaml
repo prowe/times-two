@@ -15,6 +15,7 @@ Resources:
       ContainerDefinitions:
       - Name: times-two
         Cpu: 256
+        Memory: 256
         Essential: true
         Image: !Ref ImageUrl
         PortMappings: 
