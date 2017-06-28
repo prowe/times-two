@@ -44,7 +44,7 @@ Resources:
         Image: aws/codebuild/docker:1.12.1
         EnvironmentVariables:
           - Name: DOCKER_REPOSITORY_URL
-            Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${DockerRepo}:latest"
+            Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${DockerRepo}"
       Artifacts:
         Type: CODEPIPELINE
   DockerRepo:
