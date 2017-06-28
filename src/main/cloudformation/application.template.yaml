@@ -35,7 +35,7 @@ Resources:
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
       - ContainerName: "times-two"
-        ContainerPort: 8080,
+        ContainerPort: 8080
         LoadBalancerName: !Ref LoadBalancer
   LoadBalancer:
     Type: "AWS::ElasticLoadBalancing::LoadBalancer"
