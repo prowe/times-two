@@ -7,14 +7,15 @@ phases:
       - echo Nothing to install
   pre_build:
     commands:
-      - echo Nothing to do in the pre_build phase...
+      - "DOCKER_IMAGE_URL=$DOCKER_REPOSITORY_URL:$CODEBUILD_RESOLVED_SOURCE_VERSION"
   build:
     commands:
-      - docker build --tag $DOCKER_IMAGE_URL .
+      - "docker build --tag $DOCKER_IMAGE_URL ."
   post_build:
     commands:
       - $(aws ecr get-login)
       - docker push $DOCKER_IMAGE_URL
+      - echo Pushed image to $DOCKER_IMAGE_URL
 artifacts:
   discard-paths: yes
   files:
