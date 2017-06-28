@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description": take-two service (prowe)
+Description: take-two service (prowe)
 Parameters:
   ImageUrl:
     Description: full URL (including tag) to the docker image
