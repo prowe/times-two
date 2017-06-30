@@ -1,0 +1,11 @@
+{
+    "Parameters": {
+        "ImageUrl": {
+            "Fn::GetParam": [
+                "buildResults",
+                "buildOutputs.json",
+                "imageUrl"
+            ]
+        }
+    }
+}

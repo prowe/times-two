@@ -117,3 +117,19 @@ Resources:
               ActionMode: REPLACE_ON_FAILURE
               TemplatePath: "buildResults::application.template.yaml"
               TemplateConfiguration: "buildResults::dev.params.json"
+        - Name: Deploy_Prod
+          Actions:
+          - Name: Deploy
+            ActionTypeId:
+              Category: Deploy
+              Owner: AWS
+              Provider: CloudFormation
+              Version: '1'
+            InputArtifacts:
+              - Name: buildResults
+            Configuration:
+              RoleArn: !GetAtt PipelineRole.Arn
+              StackName: !Sub '${AWS::StackName}-PROD'
+              ActionMode: REPLACE_ON_FAILURE
+              TemplatePath: "buildResults::application.template.yaml"
+              TemplateConfiguration: "buildResults::prod.params.json"
